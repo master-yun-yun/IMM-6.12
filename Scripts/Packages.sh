@@ -22,7 +22,7 @@ UPDATE_PACKAGE() {
 	for NAME in "${CUSTOM_NAMES[@]}"; do
 		# 查找匹配的目录
 		echo "Searching directory: $NAME"
-		local FOUND_DIRS=$(find ../feeds/luci/ ../feeds/packages/ -maxdepth 3 -type d -iname "*$NAME*" 2>/dev/null)
+		local FOUND_DIRS=$(find ../feeds/luci/ ../feeds/packages/ -maxdepth 6 -type d -iname "*$NAME*" 2>/dev/null)
 
 		# 删除找到的目录
 		if [ -n "$FOUND_DIRS" ]; then
@@ -38,12 +38,23 @@ UPDATE_PACKAGE() {
 	# 克隆 GitHub 仓库
 	git clone --depth=10 --single-branch --branch $PKG_BRANCH "https://github.com/$PKG_REPO.git"
 
-	# 处理克隆的仓库
+	# 处理克隆的仓库 （原逻辑，恢复取消前面“##”）
+##	if [[ $PKG_SPECIAL == "pkg" ]]; then
+##		find ./$REPO_NAME/*/ -maxdepth 6 -type d -iname "*$PKG_NAME*" -prune -exec cp -rf {} ./ \;
+##		rm -rf ./$REPO_NAME/
+##	elif [[ $PKG_SPECIAL == "name" ]]; then
+##		mv -f $REPO_NAME $PKG_NAME
+##	fi
+##}
+
+	# 处理克隆的仓库 （2025.05.13---现逻辑）----#
 	if [[ $PKG_SPECIAL == "pkg" ]]; then
-		find ./$REPO_NAME/*/ -maxdepth 6 -type d -iname "*$PKG_NAME*" -prune -exec cp -rf {} ./ \;
-		rm -rf ./$REPO_NAME/
+  	  # 修改后的 find 命令：覆盖深层目录（如 relevance/filebrowser）
+  	  find ./$REPO_NAME/ -maxdepth 10 -type d -iname "*$PKG_NAME*" -prune -exec cp -rf {} ./ \;
+  	  rm -rf ./$REPO_NAME/
 	elif [[ $PKG_SPECIAL == "name" ]]; then
-		mv -f $REPO_NAME $PKG_NAME
+  	  # 原逻辑：直接重命名仓库目录（适用于插件与仓库同名的情况）
+  	  mv -f $REPO_NAME $PKG_NAME
 	fi
 }
 
@@ -188,12 +199,12 @@ UPDATE_PACKAGE "luci-app-socat" "WROIATE/luci-app-socat" "main"
 #-------------------2025.04.12-测试-----------------#
 #UPDATE_PACKAGE "luci-app-clouddrive2" "shidahuilang/openwrt-package" "Immortalwrt" "pkg"
 
-#UPDATE_PACKAGE "istoreenhance" "master-yun-yun/package-istore" "Immortalwrt" "pkg"
-#UPDATE_PACKAGE "luci-app-istoreenhance" "master-yun-yun/package-istore" "Immortalwrt" "pkg"
+UPDATE_PACKAGE "istoreenhance" "master-yun-yun/package-istore" "Immortalwrt" "pkg"
+UPDATE_PACKAGE "luci-app-istoreenhance" "master-yun-yun/package-istore" "Immortalwrt" "pkg"
 
-#UPDATE_PACKAGE "linkmount" "shidahuilang/openwrt-package" "Immortalwrt" "pkg"
-#UPDATE_PACKAGE "linkease" "shidahuilang/openwrt-package" "Immortalwrt" "pkg"
-#UPDATE_PACKAGE "luci-app-linkease" "shidahuilang/openwrt-package" "Immortalwrt" "pkg"
+UPDATE_PACKAGE "linkmount" "shidahuilang/openwrt-package" "Immortalwrt" "pkg"
+UPDATE_PACKAGE "linkease" "shidahuilang/openwrt-package" "Immortalwrt" "pkg"
+UPDATE_PACKAGE "luci-app-linkease" "shidahuilang/openwrt-package" "Immortalwrt" "pkg"
 
 #UPDATE_PACKAGE "quickstart" "shidahuilang/openwrt-package" "Immortalwrt" "pkg"
 #UPDATE_PACKAGE "luci-app-quickstart" "shidahuilang/openwrt-package" "Immortalwrt" "pkg"
