@@ -296,5 +296,5 @@ jobs:
             地址：${{env.WRT_IP}}
             密码：${{env.WRT_PW}}
 
-            内核版本：${{env.WRT_KVER}}
-            插件列表：${{env.WRT_LIST}}
+            内核：${{env.WRT_KVER}}
+            插件：${{env.WRT_LIST}}
