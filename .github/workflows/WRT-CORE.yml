@@ -202,6 +202,18 @@ jobs:
 
           make download -j$(nproc)
 
+      #------------以下编译前清理空间---------------#
+      - name: Clean Temporary Files and Caches (Before Compilation)
+        run: |
+          echo "Pre-compilation cleanup: Removing old temporary files and caches..."
+          rm -rf ./wrt/tmp
+          rm -rf ./wrt/.ccache
+          rm -rf ./wrt/staging_dir/host*
+          rm -rf ./wrt/staging_dir/tool*
+          find ./wrt/ -type d -name "stamp" -exec rm -rf {} +
+          echo "Pre-compilation cleanup completed!"
+      #------------以上编译前清理空间---------------#
+      
       - name: Compile Firmware
         if: env.WRT_TEST != 'true'
         run: |
@@ -209,6 +221,18 @@ jobs:
 
           make -j$(nproc) || make -j1 V=s
 
+      #------------以下编译后清理空间---------------#
+      - name: Clean Temporary Files and Caches (After Compilation)
+        run: |
+          echo "Post-compilation cleanup: Removing temporary files and caches generated during compilation..."
+          rm -rf ./wrt/tmp
+          rm -rf ./wrt/.ccache
+          rm -rf ./wrt/staging_dir/host*
+          rm -rf ./wrt/staging_dir/tool*
+          find ./wrt/ -type d -name "stamp" -exec rm -rf {} +
+          echo "Post-compilation cleanup completed!"
+      #------------以上编译后清理空间---------------#
+      
       - name: Machine Information
         run: |
           cd ./wrt/
@@ -271,3 +295,6 @@ jobs:
             平台：${{env.WRT_TARGET}}
             地址：${{env.WRT_IP}}
             密码：${{env.WRT_PW}}
+
+            内核版本：${{env.WRT_KVER}}
+            插件列表：${{env.WRT_LIST}}
