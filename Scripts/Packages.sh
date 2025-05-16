@@ -156,6 +156,10 @@ argon_css_file=$(find ./luci-theme-argon/ -type f -name "cascade.css")
 sed -i "/^.main .main-left .nav li a {/,/^}/ { /font-weight: bolder/d }" $argon_css_file
 sed -i '/^\[data-page="admin-system-opkg"\] #maincontent>.container {/,/}/ s/font-weight: 600;/font-weight: normal;/' $argon_css_file
 
+#修复daed/Makefile
+rm -rf luci-app-daed/daed/Makefile && cp -r $GITHUB_WORKSPACE/patches/daed/Makefile luci-app-daed/daed/
+cat luci-app-daed/daed/Makefile
+
 #------------------以下自定义源--------------------#
 
 #全能推送PushBot----OK
