@@ -98,7 +98,7 @@ jobs:
 #          remove-codeql: 'true'
 #          remove-docker-images: 'true'
 
-      - name: Checkout Projects
+      - name: Checkout Projects - 检查项目
         uses: actions/checkout@main
       - name: Initialization Environment
         env:
