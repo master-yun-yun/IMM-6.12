@@ -49,3 +49,7 @@ CONFIG_ATH11K_MEM_PROFILE_512M=y
 CONFIG_PACKAGE_sqm-scripts-nss=y
 CONFIG_PACKAGE_kmod-qca-nss-crypto=y
 #----------2025.05.16------------#
+#docker
+CONFIG_PACKAGE_luci-app-dockerman=y
+#雅典娜屏幕控制
+CONFIG_PACKAGE_luci-app-athena-led=y
